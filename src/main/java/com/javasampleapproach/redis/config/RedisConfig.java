@@ -1,8 +1,12 @@
 package com.javasampleapproach.redis.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
@@ -11,9 +15,16 @@ import org.springframework.data.redis.serializer.GenericToStringSerializer;
 @ComponentScan("com.javasampleapproach.redis")
 public class RedisConfig {
 
+
+	@Value("spring.redis.password")
+	String redisPassword;
+
 	@Bean
 	JedisConnectionFactory jedisConnectionFactory() {
-		return new JedisConnectionFactory();
+		RedisStandaloneConfiguration rConfig = new RedisStandaloneConfiguration();
+		rConfig.setPassword("secretpassword");
+		JedisConnectionFactory jConnFac = new JedisConnectionFactory(rConfig);
+		return jConnFac;
 	}
 
 	@Bean
